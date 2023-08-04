@@ -1,5 +1,37 @@
+import { useEffect } from 'react';
+import useWeb3 from '../hooks/useWeb3';
+import Balance from './Balance';
+import { Spin } from 'antd';
+import Order from './Order';
+import { useDispatch } from 'react-redux';
+import { loadBalanceData } from '../redux/slices/balanceSlice';
+import { loadOrderData } from '../redux/slices/orderSlice';
+
 const Content = () => {
-  return <div>222</div>;
+  const { web3, account, token, exchange } = useWeb3();
+  const dispatch = useDispatch();
+
+  const start = async () => {
+    // 1. 获取连接后的合约
+    dispatch(loadBalanceData({ web3, account, token, exchange }));
+
+    // 2. 获取资产信息
+    // 3. 获取订单信息
+    dispatch(loadOrderData({ web3, exchange }));
+  };
+  useEffect(() => {
+    if (web3 && dispatch) {
+      start();
+    }
+  }, [web3, dispatch]);
+  return web3 ? (
+    <div>
+      <Balance></Balance>
+      <Order></Order>
+    </div>
+  ) : (
+    <Spin></Spin>
+  );
 };
 
 export default Content;

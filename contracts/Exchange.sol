@@ -35,7 +35,7 @@ contract Exchange {
 
   // _Order[] orderList;
   mapping(uint256 => _Order) public orders;
-  uint256 public orderCount;
+  uint256 public orderCount = 0;
 
   event Deposit(address token, address user, uint256 amount, uint256 balance);
   event Withdraw(address token, address user, uint256 amount, uint256 balance);
@@ -177,7 +177,23 @@ contract Exchange {
 
   }
   // 获取order
-  function getOrders(uint id) public view returns(_Order memory) {
+  function getOrdersById(uint id) public view returns(_Order memory) {
     return orders[id];
+  }
+  // 将存储在映射中的订单转换为数组的辅助函数
+  function mapToArray(mapping(uint256 => _Order) storage allOrders) internal view returns (_Order[] memory) {
+    // id为0的是空order 长度需加1
+    _Order[] memory orderArray = new _Order[](orderCount + 1);
+    for (uint256 i = 0; i <= orderCount; i++) {
+        orderArray[i] = allOrders[i];
+    }
+    return orderArray;
+  }
+  function getAllOrders() public view returns(_Order[] memory) {
+    if (orderCount == 0) {
+      _Order[] memory orderArray = new _Order[](orderCount);
+      return  orderArray;
+    }
+    return mapToArray(orders);
   }
 }

@@ -18,41 +18,43 @@ module.exports = async function (callback) {
   const ETHER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
   try {
-    // // 第1步 accounts[0] 转 accounts[1] 10w qt
-    // await tokenInstance.transfer(accounts[1], toWei(100000), { from: accounts[0] });
+    // 第1步 accounts[0] 转 accounts[1] 10w qt
+    await tokenInstance.transfer(accounts[1], toWei(100000), { from: accounts[0] });
 
-    // // 第2.1步 account[0] 存入 交易所 2 eth
-    // await exchangeInstance.depositEther({
-    //   from: accounts[0],
-    //   value: toWei(2),
-    // });
+    // 第2.1步 account[0] 存入 交易所 2 eth
+    await exchangeInstance.depositEther({
+      from: accounts[0],
+      value: toWei(2),
+    });
 
-    // const res1 = await exchangeInstance.tokens(ETHER_ADDRESS, accounts[0]);
-    // console.log('accounts[0]在交易所中的以太币', fromWei(res1));
+    const res1 = await exchangeInstance.tokens(ETHER_ADDRESS, accounts[0]);
+    console.log('accounts[0]在交易所中的以太币', fromWei(res1));
 
-    // // 第2.2步 account[0] 存入 交易所 10w qt
-    // await tokenInstance.approve(exchangeInstance.address, toWei(100000), { from: accounts[0] });
-    // await exchangeInstance.depositToken(tokenInstance.address, toWei(100000), { from: accounts[0] });
+    // 第2.2步 account[0] 存入 交易所 10w qt
+    await tokenInstance.approve(exchangeInstance.address, toWei(100000), { from: accounts[0] });
+    await exchangeInstance.depositToken(tokenInstance.address, toWei(100000), {
+      from: accounts[0],
+    });
 
-    // const res2 = await exchangeInstance.tokens(tokenInstance.address, accounts[0]);
-    // console.log('accounts[0]在交易所中的token', fromWei(res2));
+    const res2 = await exchangeInstance.tokens(tokenInstance.address, accounts[0]);
+    console.log('accounts[0]在交易所中的token', fromWei(res2));
 
-    // // 第3.1步 account[1] 存入 交易所 3 eth
+    // 第3.1步 account[1] 存入 交易所 3 eth
 
-    // await exchangeInstance.depositEther({
-    //   from: accounts[1],
-    //   value: toWei(3),
-    // });
+    await exchangeInstance.depositEther({
+      from: accounts[1],
+      value: toWei(3),
+    });
 
-    // const res3 = await exchangeInstance.tokens(ETHER_ADDRESS, accounts[1]);
-    // console.log('accounts[1]在交易所中的以太币', fromWei(res3));
+    const res3 = await exchangeInstance.tokens(ETHER_ADDRESS, accounts[1]);
+    console.log('accounts[1]在交易所中的以太币', fromWei(res3));
 
-    // // 第3.2步 account[1] 存入 交易所 5w qt
-    // await tokenInstance.approve(exchangeInstance.address, toWei(50000), { from: accounts[1] });
-    // await exchangeInstance.depositToken(tokenInstance.address, toWei(50000), { from: accounts[1] });
+    // 第3.2步 account[1] 存入 交易所 5w qt
+    await tokenInstance.approve(exchangeInstance.address, toWei(50000), { from: accounts[1] });
+    await exchangeInstance.depositToken(tokenInstance.address, toWei(50000), { from: accounts[1] });
 
-    // const res4 = await exchangeInstance.tokens(tokenInstance.address, accounts[1]);
-    // console.log('accounts[1]在交易所中的token', fromWei(res4));
+    const res4 = await exchangeInstance.tokens(tokenInstance.address, accounts[1]);
+    console.log('accounts[1]在交易所中的token', fromWei(res4));
 
     // accounts[0]在交易所中的以太币 2
     // accounts[0]在交易所中的token 100000
