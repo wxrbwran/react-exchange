@@ -1,4 +1,4 @@
-import { Row, Col, Card, Table } from 'antd';
+import { Row, Col, Card, Table, Button, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { fromWei } from '../utils/tools';
 import useWeb3 from '../hooks/useWeb3';
@@ -14,7 +14,7 @@ const OrderStateEnum = {
   Fill: '2',
 };
 const Order = () => {
-  const { web3, account } = useWeb3();
+  const { web3, account, token, exchange } = useWeb3();
   const order = useSelector((s) => s.order);
   const orders = order.orders;
   console.log('orders', orders);
@@ -32,6 +32,29 @@ const Order = () => {
   console.log('myOrders', myOrders);
   console.log('otherOrders', otherOrders);
 
+  const handleClickCancel = async (record) => {
+    console.log('handleClickCancel', record);
+    try {
+      message.info('正在取消');
+      await exchange.methods.cancelOrder(record.id).send({
+        from: account,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleClickFill = async (record) => {
+    console.log('handleClickFill', record);
+    try {
+      message.info('正在进行交易');
+      await exchange.methods.fillOrder(record.id).send({
+        from: account,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const columns = [
     {
       title: '时间',
@@ -48,6 +71,36 @@ const Order = () => {
       title: 'ETH',
       dataIndex: 'amountGive',
       render: (text) => fromWei(web3, text),
+    },
+  ];
+  const myColumns = [
+    ...columns,
+    {
+      title: '操作',
+      dataIndex: 'actions',
+      render: (text, record) => (
+        <Button
+          type='primary'
+          onClick={() => handleClickCancel(record)}
+        >
+          取消
+        </Button>
+      ),
+    },
+  ];
+  const otherColumns = [
+    ...columns,
+    {
+      title: '操作',
+      dataIndex: 'actions',
+      render: (text, record) => (
+        <Button
+          danger
+          onClick={() => handleClickFill(record)}
+        >
+          买入
+        </Button>
+      ),
     },
   ];
   return (
@@ -75,7 +128,7 @@ const Order = () => {
             <Table
               rowKey={(record) => record.id}
               dataSource={myOrders}
-              columns={columns}
+              columns={myColumns}
             />
           </Card>
         </Col>
@@ -88,7 +141,7 @@ const Order = () => {
             <Table
               rowKey={(record) => record.id}
               dataSource={otherOrders}
-              columns={columns}
+              columns={otherColumns}
             />
           </Card>
         </Col>

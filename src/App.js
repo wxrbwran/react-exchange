@@ -1,5 +1,5 @@
 import './App.css';
-
+import { ConfigProvider } from 'antd';
 import Content from './views/Content';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -9,9 +9,11 @@ import store from './redux/store';
 function App() {
   return (
     <Provider store={store}>
-      <div className='App'>
-        <Content></Content>
-      </div>
+      <ConfigProvider hashPriority='high'>
+        <div className='App'>
+          <Content></Content>
+        </div>
+      </ConfigProvider>
     </Provider>
   );
 }

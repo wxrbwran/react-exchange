@@ -20,10 +20,21 @@ const Content = () => {
     dispatch(loadOrderData({ web3, exchange }));
   };
   useEffect(() => {
-    if (web3 && dispatch) {
+    if (web3 && exchange && dispatch) {
       start();
+
+      exchange.events.Order({}, (err, event) => {
+        dispatch(loadOrderData({ web3, exchange }));
+      });
+      exchange.events.Cancel({}, (err, event) => {
+        dispatch(loadOrderData({ web3, exchange }));
+      });
+      exchange.events.Fill({}, (err, event) => {
+        start();
+      });
     }
-  }, [web3, dispatch]);
+  }, [web3, exchange, dispatch]);
+  useEffect(() => {}, []);
   return web3 ? (
     <div>
       <Balance></Balance>
