@@ -23,7 +23,7 @@ const Content = () => {
     if (web3 && exchange && dispatch) {
       start();
 
-      exchange.events.Order({}, (err, event) => {
+      exchange.events.Order({ fromBlock: 0 }, (err, event) => {
         dispatch(loadOrderData({ web3, exchange }));
       });
       exchange.events.Cancel({}, (err, event) => {
